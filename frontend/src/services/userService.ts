@@ -1,38 +1,56 @@
 import api from './api';
-import type { User } from '../types';
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
+import type { User, WatchlistEntry, WatchHistoryEntry } from '../types';
 
 export const userService = {
-  login: async (credentials: any) => {
-    const response = await api.post<AuthResponse>('/user-service/auth/login', credentials);
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-    }
+  // User Management
+  getAllUsers: async () => {
+    const response = await api.get<User[]>('/user-service/api/users');
     return response.data;
   },
 
-  register: async (userData: any) => {
-    const response = await api.post<AuthResponse>('/user-service/auth/register', userData);
+  getUserById: async (id: string) => {
+    const response = await api.get<User>(`/user-service/api/users/${id}`);
     return response.data;
   },
 
-  getCurrentUser: async () => {
-    const response = await api.get<User>('/user-service/users/me');
+  createUser: async (userData: Partial<User>) => {
+    const response = await api.post<User>('/user-service/api/users', userData);
     return response.data;
   },
 
-  updateProfile: async (userData: any) => {
-    const response = await api.put<User>('/user-service/users/me', userData);
+  deleteUser: async (id: string) => {
+    await api.delete(`/user-service/api/users/${id}`);
+  },
+
+  // Watchlist
+  addToWatchlist: async (userId: string, videoId: string) => {
+    const response = await api.post<WatchlistEntry>(`/user-service/api/users/${userId}/watchlist/${videoId}`);
     return response.data;
   },
 
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  removeFromWatchlist: async (userId: string, videoId: string) => {
+    await api.delete(`/user-service/api/users/${userId}/watchlist/${videoId}`);
+  },
+
+  getWatchlist: async (userId: string) => {
+    const response = await api.get<WatchlistEntry[]>(`/user-service/api/users/${userId}/watchlist`);
+    return response.data;
+  },
+
+  // History
+  recordHistory: async (userId: string, historyData: Partial<WatchHistoryEntry>) => {
+    const response = await api.post<WatchHistoryEntry>(`/user-service/api/users/${userId}/history`, historyData);
+    return response.data;
+  },
+
+  getHistory: async (userId: string) => {
+    const response = await api.get<WatchHistoryEntry[]>(`/user-service/api/users/${userId}/history`);
+    return response.data;
+  },
+
+  // Stats
+  getUserStats: async (userId: string) => {
+    const response = await api.get<any>(`/user-service/api/users/${userId}/stats`);
+    return response.data;
   }
 };

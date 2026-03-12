@@ -3,27 +3,27 @@ import type { Video } from '../types';
 
 export const videoService = {
   getAllVideos: async () => {
-    const response = await api.get<Video[]>('/video-service/videos');
+    const response = await api.get<Video[]>('/video-service/api/videos');
     return response.data;
   },
 
   getVideoById: async (id: string) => {
-    const response = await api.get<Video>(`/video-service/videos/${id}`);
+    const response = await api.get<Video>(`/video-service/api/videos/${id}`);
     return response.data;
   },
 
   searchVideos: async (query: string) => {
-    const response = await api.get<Video[]>(`/video-service/videos/search?query=${query}`);
+    const response = await api.get<Video[]>(`/video-service/api/videos/search?query=${query}`);
     return response.data;
   },
 
   getVideosByCategory: async (category: string) => {
-    const response = await api.get<Video[]>(`/video-service/videos/category/${category}`);
+    const response = await api.get<Video[]>(`/video-service/api/videos/category/${category}`);
     return response.data;
   },
 
   getVideosByType: async (type: string) => {
-    const response = await api.get<Video[]>(`/video-service/videos/type/${type}`);
+    const response = await api.get<Video[]>(`/video-service/api/videos/type/${type}`);
     return response.data;
   }
 };

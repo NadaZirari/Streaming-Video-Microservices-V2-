@@ -1,7 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, Play, Info } from 'lucide-react';
-import { MOCK_VIDEOS, CATEGORIES } from '../data/mockData';
+import { useVideoStore } from '../store/useVideoStore';
+import { CATEGORIES } from '../data/mockData';
 import VideoCard from '../components/ui/VideoCard';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,10 +11,23 @@ const Home: React.FC = () => {
   const [sortBy, setSortBy] = useState('recent'); // recent, rated, popular
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const heroVideo = MOCK_VIDEOS[0]; // Featured video
+  const { videos, loading, fetchVideos } = useVideoStore();
+
+  useEffect(() => {
+    fetchVideos();
+  }, [fetchVideos]);
+
+  const heroVideo = videos[0] || {
+    id: 'placeholder',
+    title: 'Chargement...',
+    description: 'Veuillez patienter pendant le chargement du catalogue.',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1000',
+    releaseYear: 2024,
+    category: 'S/O'
+  };
 
   const filteredVideos = useMemo(() => {
-    return MOCK_VIDEOS.filter(video => {
+    return videos.filter(video => {
       const matchesType = !type || video.type.toLowerCase() === type.toLowerCase();
       const matchesCategory = selectedCategory === 'Tous' || video.category === selectedCategory;
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -27,7 +38,7 @@ const Home: React.FC = () => {
       if (sortBy === 'rated') return b.rating - a.rating;
       return 0;
     });
-  }, [type, selectedCategory, searchQuery, sortBy]);
+  }, [videos, type, selectedCategory, searchQuery, sortBy]);
 
   return (
     <div className="pb-20">
