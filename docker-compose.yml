@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  config-service:
+    build: ./backend/config-service
+    container_name: config-service
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - streamvid-net
+
+  discovery-service:
+    build: ./backend/discovery-service
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-service:8888
+    depends_on:
+      config-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - streamvid-net
+
+  gateway-service:
+    build: ./backend/gateway-service
+    container_name: gateway-service
+    ports:
+      - "8060:8060"
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-service:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - streamvid-net
+
+  video-service:
+    build: ./backend/video-service
+    container_name: video-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-service:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - streamvid-net
+
+  user-service:
+    build: ./backend/user-service
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-service:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      video-service:
+        condition: service_started
+    networks:
+      - streamvid-net
+
+  frontend:
+    build: ./frontend
+    container_name: streamvid-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway-service
+    networks:
+      - streamvid-net
+
+networks:
+  streamvid-net:
+    driver: bridge
