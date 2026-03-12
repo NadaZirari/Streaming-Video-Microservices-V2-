@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-12T15:13:45+0000",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
+    date = "2026-03-12T16:35:31+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class VideoMapperImpl implements VideoMapper {
@@ -21,18 +21,18 @@ public class VideoMapperImpl implements VideoMapper {
 
         VideoDTO.VideoDTOBuilder videoDTO = VideoDTO.builder();
 
-        videoDTO.cast( video.getCast() );
-        videoDTO.category( video.getCategory() );
-        videoDTO.description( video.getDescription() );
-        videoDTO.director( video.getDirector() );
-        videoDTO.duration( video.getDuration() );
         videoDTO.id( video.getId() );
-        videoDTO.rating( video.getRating() );
-        videoDTO.releaseYear( video.getReleaseYear() );
-        videoDTO.thumbnailUrl( video.getThumbnailUrl() );
         videoDTO.title( video.getTitle() );
+        videoDTO.description( video.getDescription() );
+        videoDTO.thumbnailUrl( video.getThumbnailUrl() );
         videoDTO.trailerUrl( video.getTrailerUrl() );
+        videoDTO.duration( video.getDuration() );
+        videoDTO.releaseYear( video.getReleaseYear() );
         videoDTO.type( video.getType() );
+        videoDTO.category( video.getCategory() );
+        videoDTO.rating( video.getRating() );
+        videoDTO.director( video.getDirector() );
+        videoDTO.cast( video.getCast() );
 
         return videoDTO.build();
     }
@@ -45,18 +45,18 @@ public class VideoMapperImpl implements VideoMapper {
 
         Video.VideoBuilder video = Video.builder();
 
-        video.cast( videoDTO.getCast() );
-        video.category( videoDTO.getCategory() );
-        video.description( videoDTO.getDescription() );
-        video.director( videoDTO.getDirector() );
-        video.duration( videoDTO.getDuration() );
         video.id( videoDTO.getId() );
-        video.rating( videoDTO.getRating() );
-        video.releaseYear( videoDTO.getReleaseYear() );
-        video.thumbnailUrl( videoDTO.getThumbnailUrl() );
         video.title( videoDTO.getTitle() );
+        video.description( videoDTO.getDescription() );
+        video.thumbnailUrl( videoDTO.getThumbnailUrl() );
         video.trailerUrl( videoDTO.getTrailerUrl() );
+        video.duration( videoDTO.getDuration() );
+        video.releaseYear( videoDTO.getReleaseYear() );
         video.type( videoDTO.getType() );
+        video.category( videoDTO.getCategory() );
+        video.rating( videoDTO.getRating() );
+        video.director( videoDTO.getDirector() );
+        video.cast( videoDTO.getCast() );
 
         return video.build();
     }

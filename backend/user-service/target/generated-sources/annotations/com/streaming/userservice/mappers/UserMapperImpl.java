@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-12T15:13:43+0000",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260224-0835, environment: Java 21.0.10 (Eclipse Adoptium)"
+    date = "2026-03-12T16:35:35+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -25,10 +25,10 @@ public class UserMapperImpl implements UserMapper {
 
         UserDTO.UserDTOBuilder userDTO = UserDTO.builder();
 
-        userDTO.email( user.getEmail() );
         userDTO.id( user.getId() );
-        userDTO.password( user.getPassword() );
         userDTO.username( user.getUsername() );
+        userDTO.email( user.getEmail() );
+        userDTO.password( user.getPassword() );
 
         return userDTO.build();
     }
@@ -41,10 +41,10 @@ public class UserMapperImpl implements UserMapper {
 
         User.UserBuilder user = User.builder();
 
-        user.email( userDTO.getEmail() );
         user.id( userDTO.getId() );
-        user.password( userDTO.getPassword() );
         user.username( userDTO.getUsername() );
+        user.email( userDTO.getEmail() );
+        user.password( userDTO.getPassword() );
 
         return user.build();
     }
@@ -57,10 +57,10 @@ public class UserMapperImpl implements UserMapper {
 
         WatchlistDTO.WatchlistDTOBuilder watchlistDTO = WatchlistDTO.builder();
 
-        watchlistDTO.addedAt( watchlist.getAddedAt() );
         watchlistDTO.id( watchlist.getId() );
         watchlistDTO.userId( watchlist.getUserId() );
         watchlistDTO.videoId( watchlist.getVideoId() );
+        watchlistDTO.addedAt( watchlist.getAddedAt() );
 
         return watchlistDTO.build();
     }
@@ -73,10 +73,10 @@ public class UserMapperImpl implements UserMapper {
 
         Watchlist.WatchlistBuilder watchlist = Watchlist.builder();
 
-        watchlist.addedAt( watchlistDTO.getAddedAt() );
         watchlist.id( watchlistDTO.getId() );
         watchlist.userId( watchlistDTO.getUserId() );
         watchlist.videoId( watchlistDTO.getVideoId() );
+        watchlist.addedAt( watchlistDTO.getAddedAt() );
 
         return watchlist.build();
     }
@@ -89,12 +89,12 @@ public class UserMapperImpl implements UserMapper {
 
         WatchHistoryDTO.WatchHistoryDTOBuilder watchHistoryDTO = WatchHistoryDTO.builder();
 
-        watchHistoryDTO.completed( watchHistory.isCompleted() );
         watchHistoryDTO.id( watchHistory.getId() );
-        watchHistoryDTO.progressTime( watchHistory.getProgressTime() );
         watchHistoryDTO.userId( watchHistory.getUserId() );
         watchHistoryDTO.videoId( watchHistory.getVideoId() );
         watchHistoryDTO.watchedAt( watchHistory.getWatchedAt() );
+        watchHistoryDTO.progressTime( watchHistory.getProgressTime() );
+        watchHistoryDTO.completed( watchHistory.isCompleted() );
 
         return watchHistoryDTO.build();
     }
@@ -107,12 +107,12 @@ public class UserMapperImpl implements UserMapper {
 
         WatchHistory.WatchHistoryBuilder watchHistory = WatchHistory.builder();
 
-        watchHistory.completed( watchHistoryDTO.isCompleted() );
         watchHistory.id( watchHistoryDTO.getId() );
-        watchHistory.progressTime( watchHistoryDTO.getProgressTime() );
         watchHistory.userId( watchHistoryDTO.getUserId() );
         watchHistory.videoId( watchHistoryDTO.getVideoId() );
         watchHistory.watchedAt( watchHistoryDTO.getWatchedAt() );
+        watchHistory.progressTime( watchHistoryDTO.getProgressTime() );
+        watchHistory.completed( watchHistoryDTO.isCompleted() );
 
         return watchHistory.build();
     }
