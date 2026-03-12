@@ -1,14 +1,24 @@
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { MOCK_VIDEOS } from '../data/mockData';
-import { User as UserIcon, Mail, Calendar, LogOut, Clock, Film, History, TrendingUp } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { useUserStore } from '../store/useUserStore';
+import { useVideoStore } from '../store/useVideoStore';
+import { User as UserIcon, LogOut, Clock, Film, History, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Profile: React.FC = () => {
-  const { user, logout } = useAuth();
-  const [watchlist] = useLocalStorage<string[]>('user_watchlist', []);
-  const [history] = useLocalStorage<any[]>('watch_history', []);
+  const { currentUser, watchlist, history, fetchWatchlist, fetchHistory, setCurrentUser } = useUserStore();
+  const { videos } = useVideoStore();
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchWatchlist(currentUser.id);
+      fetchHistory(currentUser.id);
+    }
+  }, [currentUser, fetchWatchlist, fetchHistory]);
+
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('token');
+  };
 
   const stats = [
     { label: 'Ma Liste', value: watchlist.length, icon: Film, color: 'text-primary', bg: 'bg-primary/10' },
@@ -30,8 +40,8 @@ const Profile: React.FC = () => {
           </div>
           
           <div className="flex-grow text-center md:text-left">
-            <h1 className="font-outfit text-4xl font-black md:text-5xl">{user?.username}</h1>
-            <p className="mt-2 text-xl text-gray-400">{user?.email}</p>
+            <h1 className="font-outfit text-4xl font-black md:text-5xl">{currentUser?.username}</h1>
+            <p className="mt-2 text-xl text-gray-400">{currentUser?.email}</p>
             
             <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
               <button className="rounded-xl glass px-6 py-3 font-bold text-white transition-all hover:bg-white/10">
@@ -73,7 +83,7 @@ const Profile: React.FC = () => {
             {history.length > 0 ? (
               <div className="divide-y divide-white/5">
                 {history.slice(0, 5).map((entry) => {
-                  const video = MOCK_VIDEOS.find(v => v.id === entry.videoId);
+                  const video = videos.find(v => v.id === entry.videoId);
                   return (
                     <div key={entry.id} className="flex items-center gap-4 p-4 transition-colors hover:bg-white/5">
                       <img 

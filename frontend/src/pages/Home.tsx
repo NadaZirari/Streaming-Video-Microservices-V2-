@@ -1,3 +1,6 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Search, SlidersHorizontal, Play, Info } from 'lucide-react';
 import { useVideoStore } from '../store/useVideoStore';
 import { CATEGORIES } from '../data/mockData';
 import VideoCard from '../components/ui/VideoCard';
@@ -11,7 +14,7 @@ const Home: React.FC = () => {
   const [sortBy, setSortBy] = useState('recent'); // recent, rated, popular
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const { videos, loading, fetchVideos } = useVideoStore();
+  const { videos, fetchVideos } = useVideoStore();
 
   useEffect(() => {
     fetchVideos();

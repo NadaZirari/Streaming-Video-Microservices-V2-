@@ -1,52 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Play, Plus, Check, Star, Clock, Calendar, Users, ArrowLeft, ThumbsUp, Share2 } from 'lucide-react';
-import { MOCK_VIDEOS } from '../data/mockData';
+import { useVideoStore } from '../store/useVideoStore';
+import { useUserStore } from '../store/useUserStore';
 import type { Video } from '../types';
 import VideoCard from '../components/ui/VideoCard';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import { cn } from '../lib/utils';
-import { motion } from 'framer-motion';
 
 const VideoDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  
+  const { videos, fetchVideos } = useVideoStore();
+  const { currentUser, watchlist, addToWatchlist, removeFromWatchlist } = useUserStore();
   const [video, setVideo] = useState<Video | null>(null);
-  const [watchlist, setWatchlist] = useLocalStorage<string[]>('user_watchlist', []);
-  const [history, setHistory] = useLocalStorage<any[]>('watch_history', []);
   const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
 
   useEffect(() => {
-    const foundVideo = MOCK_VIDEOS.find(v => v.id === id);
+    const foundVideo = videos.find(v => v.id === id);
     if (foundVideo) {
       setVideo(foundVideo);
-      // Add to history
-      const historyEntry = {
-        id: Date.now().toString(),
-        videoId: foundVideo.id,
-        watchedAt: new Date().toISOString(),
-        completed: false
-      };
-      setHistory(prev => [historyEntry, ...prev.filter(h => h.videoId !== foundVideo.id)].slice(0, 20));
+    } else if (videos.length === 0) {
+      fetchVideos();
     } else {
       navigate('/');
     }
     window.scrollTo(0, 0);
-  }, [id, navigate, setHistory]);
+  }, [id, videos, fetchVideos, navigate]);
 
   if (!video) return null;
 
-  const isInWatchlist = watchlist.includes(video.id);
+  const isInWatchlist = watchlist.some(entry => entry.videoId === video.id);
 
-  const toggleWatchlist = () => {
+  const toggleWatchlist = async () => {
+    if (!currentUser) {
+      // Handle login redirect if needed
+      return;
+    }
     if (isInWatchlist) {
-      setWatchlist(watchlist.filter(vid => vid !== video.id));
+      await removeFromWatchlist(currentUser.id, video.id);
     } else {
-      setWatchlist([...watchlist, video.id]);
+      await addToWatchlist(currentUser.id, video.id);
     }
   };
 
-  const similarVideos = MOCK_VIDEOS.filter(v => v.category === video.category && v.id !== video.id);
+  const similarVideos = videos.filter(v => v.category === video.category && v.id !== video.id);
 
   return (
     <div className="min-h-screen pb-20 pt-20">
