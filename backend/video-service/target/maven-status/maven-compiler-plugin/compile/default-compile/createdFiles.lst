@@ -1,0 +1,12 @@
+com\streaming\videoservice\services\VideoService.class
+com\streaming\videoservice\controllers\VideoController.class
+com\streaming\videoservice\dtos\VideoDTO.class
+com\streaming\videoservice\entities\Video$VideoType.class
+com\streaming\videoservice\mappers\VideoMapperImpl.class
+com\streaming\videoservice\dtos\VideoDTO$VideoDTOBuilder.class
+com\streaming\videoservice\VideoServiceApplication.class
+com\streaming\videoservice\entities\Video$Category.class
+com\streaming\videoservice\entities\Video.class
+com\streaming\videoservice\repositories\VideoRepository.class
+com\streaming\videoservice\mappers\VideoMapper.class
+com\streaming\videoservice\entities\Video$VideoBuilder.class
